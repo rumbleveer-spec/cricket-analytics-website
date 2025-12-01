@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Cricket Analytics{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">🏏 Cricket Analytics Dashboard</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Total Matches</h5>
+                <h2>44</h2>
+                <p class="mb-0">BBL 2024-25 League + Playoffs</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Top Run Scorer</h5>
+                <h2>Mitchell Owen</h2>
+                <p class="mb-0">452 runs @ SR 203.6</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">BBL Champions</h5>
+                <h2>Hobart Hurricanes</h2>
+                <p class="mb-0">Maiden Title 🏆</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Top 5 Run Scorers</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="battingChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Top 5 Wicket Takers</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="bowlingChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Matches</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Match</th>
+                                <th>Winner</th>
+                                <th>Margin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if recent_matches %}
+                                {% for match in recent_matches %}
+                                <tr>
+                                    <td>{{ match.date }}</td>
+                                    <td>{{ match.team1 }} vs {{ match.team2 }}</td>
+                                    <td><strong>{{ match.winner }}</strong></td>
+                                    <td>{{ match.margin }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        No data available. Please import cricket data.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Fetch and render batting stats
+    fetch('/api/stats/batting')
+        .then(res => res.json())
+        .then(data => {
+            const ctx = document.getElementById('battingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Runs',
+                        data: data.runs,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+
+    // Fetch and render bowling stats
+    fetch('/api/stats/bowling')
+        .then(res => res.json())
+        .then(data => {
+            const ctx = document.getElementById('bowlingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Wickets',
+                        data: data.wickets,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+</script>
+{% endblock %}
