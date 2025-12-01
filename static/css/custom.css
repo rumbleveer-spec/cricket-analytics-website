@@ -1,0 +1,28 @@
+/* Cricket Analytics Custom Styles */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+}
+
+.card-body canvas {
+    max-height: 300px;
+}
+
+footer {
+    margin-top: auto;
+}
