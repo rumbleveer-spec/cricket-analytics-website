@@ -3,37 +3,42 @@
 {% block title %}BBL Batting Stats - Cricket Analytics{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">BBL 2024-25 - Top Batsmen</h1>
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">📊 BBL 2024-25 - Batting Statistics</h1>
+    </div>
+</div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead class="table-primary">
-                    <tr>
-                        <th>Rank</th>
-                        <th>Player</th>
-                        <th>Team</th>
-                        <th>Matches</th>
-                        <th>Runs</th>
-                        <th>Average</th>
-                        <th>Strike Rate</th>
-                        <th>High Score</th>
-                        <th>100s</th>
-                        <th>50s</th>
-                        <th>4s</th>
-                        <th>6s</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if players %}
-                        {% for player in players %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                {% if players %}
+                <table id="battingTable" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Player</th>
+                            <th>Team</th>
+                            <th>Matches</th>
+                            <th>Runs</th>
+                            <th>Average</th>
+                            <th>Strike Rate</th>
+                            <th>High Score</th>
+                            <th>100s</th>
+                            <th>50s</th>
+                            <th>4s</th>
+                            <th>6s</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for player in players %}
                         <tr>
                             <td>{{ player.rank }}</td>
                             <td><strong>{{ player.player_name }}</strong></td>
                             <td>{{ player.team }}</td>
                             <td>{{ player.matches }}</td>
-                            <td>{{ player.runs }}</td>
+                            <td><strong>{{ player.runs }}</strong></td>
                             <td>{{ "%.2f"|format(player.average) }}</td>
                             <td>{{ "%.2f"|format(player.strike_rate) }}</td>
                             <td>{{ player.high_score }}</td>
@@ -42,17 +47,28 @@
                             <td>{{ player.fours }}</td>
                             <td>{{ player.sixes }}</td>
                         </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="12" class="text-center">
-                                No batting data available. Please import data.
-                            </td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="alert alert-warning">
+                    <h5>⚠️ No Data Available</h5>
+                    <p>Please import batting statistics using the data import script.</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('#battingTable').DataTable({
+        pageLength: 20,
+        order: [[4, 'desc']]
+    });
+});
+</script>
 {% endblock %}
