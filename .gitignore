@@ -8,13 +8,17 @@ venv/
 env/
 ENV/
 
+# Flask
+instance/
+.webassets-cache
+
 # Database
 *.db
 *.sqlite
 *.sqlite3
-data/
+data/*.db
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
@@ -26,3 +30,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Environment
+.env
+.env.local
